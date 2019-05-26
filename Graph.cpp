@@ -1,9 +1,10 @@
-﻿#pragma once
-#include "Graph.h"
+﻿#include "Graph.h"
 #include <list>
 #include <fstream>
 #include <algorithm>
 #include <limits>
+
+
 //---------------------------------------------------------------------------------------------------------------------
 
 Node* Graph::findNode(const std::string& id)
