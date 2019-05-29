@@ -38,22 +38,15 @@ Edge::~Edge()
     // - entfernt die Edge (this) aus m_outgoingEdges im Source-Node
     // - entfernt die Edge (this) aus m_incomingEdges im Destination-Node
 
-	while (m_rSrc.getOutEdges().size() != 0) {								// richtig ?
-	//	delete(m_rSrc.getOutEdges().front());
-		m_rSrc.getOutEdges().pop_front();
-		std::cout << "~D out" << std::endl;
-	}
-	while (m_rDst.getInEdges().size() != 0) {
-	//	delete(m_rSrc.getInEdges().front());
-		m_rDst.getInEdges().pop_front();
-		std::cout << "~D in" << std::endl;
-	}
-	//delete this;
+	m_rSrc.getOutEdges().remove(this);											// works
+	m_rSrc.getInEdges().remove(this);
+	m_rDst.getInEdges().remove(this);
+	m_rDst.getOutEdges().remove(this);
+	std::cout << "DEST" << std::endl;
 
+    // TEST:																 
 
-    // TEST:																// delete only 3/7 
-
-    // Erstellen Sie in main.cpp drei Edges, die jeweils den selben Source- und Destination-Node haben.
+    // Erstellen Sie in main.cpp drei Edges, die jeweils den selben Source- und Destination-Node haben.		// works
     // Löschen Sie eine Edge wieder!
     // Prüfen Sie, ob die gelöschte Edge aus m_outgoingEdges bzw. m_incomingEdges entfernt wurde!
 
@@ -67,6 +60,15 @@ bool Edge::isConnectedTo(const Node& rNode) const
 {
     // - gibt true zurück, wenn rNode entweder m_rSrc und m_rDst ist.
     // Hinweis: Adressen vergleichen, um zu gucken, ob es wirklich das selbe Objekt ist!
+	const Node *ptr1 = &rNode;																// works
+	const Node *ptr2 = &m_rSrc;
+	const Node *ptr3 = &m_rDst;
+
+	if ((ptr1 == ptr2)||(ptr1 == ptr3)) {
+		std::cout << "1" << std::endl;
+		return true;
+	}
+	std::cout << "0" << std::endl;
     return false;
 }
 
