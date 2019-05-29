@@ -13,14 +13,12 @@ Node* Graph::findNode(const std::string& id){
     // - gibt den Pointer auf den Node zurück, wenn er gefunden wurde.
     // - gibt NULL zurück, falls kein Node mit der id gefunden wurde.
 	Node n1(id);
-	Node* ptr1 = nullptr;
 	//std::list<Node*>::const_iterator it;
 
 	for (auto it = m_nodes.begin();it != m_nodes.end();++it) {					// not tested
-		ptr1 = *it;
-		if (n1.getID() == ptr1->getID()) {
+		if (n1.getID() == (*it)->getID()) {
 			std::cout << "found: " << ptr1->getID() << std::endl;
-			return ptr1;
+			return *it;
 		}
 	}
 	return nullptr;
