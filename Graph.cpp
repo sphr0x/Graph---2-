@@ -17,7 +17,7 @@ Node* Graph::findNode(const std::string& id){
 
 	for (auto it = m_nodes.begin();it != m_nodes.end();++it) {					// not tested
 		if (n1.getID() == (*it)->getID()) {
-			std::cout << "found: " << ptr1->getID() << std::endl;
+			std::cout << "found: " << (*it)->getID() << std::endl;
 			return *it;
 		}
 	}
