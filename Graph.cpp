@@ -5,6 +5,7 @@
 #include <limits>
 #include <iostream>
 
+//evtl ALLES mit shared/unique ptr machen
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -12,15 +13,14 @@ Node* Graph::findNode(const std::string& id){
     // - soll einen Node mit der gegebenen id in m_nodes suchen
     // - gibt den Pointer auf den Node zurück, wenn er gefunden wurde.
     // - gibt NULL zurück, falls kein Node mit der id gefunden wurde.
-	Node n1(id);
-	//std::list<Node*>::const_iterator it;
 
-	for (auto it = m_nodes.begin();it != m_nodes.end();++it) {					// not tested
-		if (n1.getID() == (*it)->getID()) {
+	for (auto it = m_nodes.begin();it != m_nodes.end();++it) {					// works
+		if (id == (*it)->getID()) {
 			std::cout << "found: " << (*it)->getID() << std::endl;
 			return *it;
 		}
 	}
+	std::cout << "NULL" << std::endl;
 	return nullptr;
 
     // TEST:
@@ -43,20 +43,14 @@ Node& Graph::addNode(Node* pNewNode){
 
 	//std::list<Node*> m_nodes;
 
-	try {
-		for (auto it = m_nodes.begin(); it != m_nodes.end();++it) {				// not tested
-			if (pNewNode->getID() == (*it)->getID()) {
-				throw "exc";
-			}
-			else {
-				m_nodes.push_back(pNewNode);
-				return *new Node(pNewNode->getID());
-			}
+
+	for (auto it = m_nodes.begin(); it != m_nodes.end();++it) {				// works
+		if (pNewNode->getID() == (*it)->getID()) {
+			throw "exc";
 		}
 	}
-	catch (const std::string) {
-		std::cerr << "Exception: Same ID!" << std::endl;
-	}
+	m_nodes.push_back(pNewNode);
+	return *pNewNode;
 
     // TEST:
     // Testen Sie die Funktion, indem Sie indem Sie einen Graph mit ein paar Nodes in main.cpp erstellen
@@ -75,8 +69,8 @@ Edge& Graph::addEdge(Edge* pNewEdge){
 	// std::list<Edge*> m_edges;
 	// Node& getSrcNode() { return m_rSrc; }
 	// Node& getDstNode() { return m_rDst; }
-
-	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// not tested
+	/*
+	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// works
 		if (!((*it)->getSrcNode().getID() == pNewEdge->getSrcNode().getID())) {
 			addNode(&pNewEdge->getSrcNode());
 		}
@@ -86,7 +80,12 @@ Edge& Graph::addEdge(Edge* pNewEdge){
 	}
 	m_edges.push_back(pNewEdge);
 	return *new Edge(*new Node(pNewEdge->getSrcNode()), *new Node(pNewEdge->getDstNode()));
+	*/
 
+	m_edges.push_back(pNewEdge);
+	addNode(&pNewEdge->getSrcNode());
+	addNode(&pNewEdge->getDstNode());
+	return *pNewEdge;
     // TEST:
     // Testen Sie die Funktion, indem Sie indem Sie einen Graph mit ein paar Nodes und Edges in main.cpp erstellen
     // Testen Sie mit der Funktion 'findEdges', ob die hinzugefügten Edges im Graph vorhanden sind.
@@ -98,14 +97,21 @@ Edge& Graph::addEdge(Edge* pNewEdge){
 Graph::~Graph(){
     // - soll alle Edges im Graph löschen (delete)
     // - soll alle Nodes im Graph löschen (delete)
-
-	for (auto it = m_edges.begin(); it != m_edges.end();++it) {						// not tested
+	/*
+	for (auto it = m_edges.begin(); it != m_edges.end();++it) {						
 		delete *it;															// here the problems with iterator and delete
-		m_edges.erase(it);               // needed ?
+		m_edges.remove(*it);               // needed ?
 	}
 	for (auto it = m_nodes.begin(); it != m_nodes.end();++it) {
 		delete *it;
-		m_nodes.erase(it);
+		m_nodes.remove(*it);
+	}
+	*/
+	for (auto edge : m_edges) {												// works
+		delete edge;
+	}
+	for (auto node : m_nodes) {
+		delete node;
 	}
 }
 
@@ -116,19 +122,21 @@ void Graph::remove(Node& rNode){
 	// - finden sie den Pointer mit der Adresse von 'rNode' in m_nodes.
     // 		- der Pointer auf rNode soll aus m_nodes entfernt werden!
     // 		- der Pointer auf rNode muss mit 'delete' freigegeben werden!
-
-	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// not tested
+	/*
+	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								
 		if ((*it)->isConnectedTo(rNode)) {
-			m_edges.erase(it);
+			m_edges.remove(*it);
 		}
 	}
 	for (auto it = m_nodes.begin(); it != m_nodes.end();++it) {
 		if (*it == &rNode) {				// deref it == adress of rNode  ??? ( it double ptr ? )
 			delete *it;
-			m_nodes.erase(it);
+			m_nodes.remove(*it);
 		}
 	}
-
+	*/
+	m_nodes.remove(&rNode);															// works
+	delete(&rNode);
 
 
     // TEST:
@@ -143,14 +151,17 @@ void Graph::remove(Node& rNode){
 void Graph::remove(Edge& rEdge){
     // - der Pointer auf rEdge muss aus m_edges entfernt werden!
     // - der Pointer auf rEdge muss mit 'delete' freigegeben werden!
-
-	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// not tested
+	/*
+	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								
 		if (*it == &rEdge) {
 			delete *it;
-			m_edges.erase(it);
+			m_edges.remove(*it);
 		}	
 	}
+	*/
 
+	m_edges.remove(&rEdge);													// works
+	delete(&rEdge);
     // TEST:
     // Testen Sie die Funktion, indem Sie indem Sie einen Graph mit ein paar Nodes und Edges in main.cpp erstellen
     // und anschließend einzelne Edges wieder löschen.
@@ -166,9 +177,10 @@ std::vector<Edge*> Graph::findEdges(const Node& rSrc, const Node& rDst){
     // - füge die Zeiger der Edges in den vector 'ret' ein.
 	std::vector<Edge*> ret;
 
-	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// not tested
+	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// works
 		if ( ( (*it)->isConnectedTo(rSrc) ) && ( (*it)->isConnectedTo(rDst) ) ) { 
 			ret.push_back(*it);
+			std::cout << "found EDGE " << std::endl;
 		}
 	}
     return ret;

@@ -13,4 +13,5 @@ Node::Node()
 	std::stringstream s;
 	s << "Node_" << std::setw(4) << std::setfill('0') << s_numInstances;
 	m_id = s.str();
+	std::cout << "standart Node construced!" << std::endl;
 }
