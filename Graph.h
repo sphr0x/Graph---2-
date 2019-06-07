@@ -7,6 +7,7 @@
 #include <string>
 #include "Node.h"
 #include "Edge.h"
+#include <map>
 // not complete - def all functions in cpp ~.~
 class Graph
 {
@@ -21,7 +22,11 @@ public:
 	const std::list<Edge*>& getEdges() { return m_edges; }
 	Node* findNode(const std::string& id);
 	std::vector<Edge*> findEdges(const Node& rSrc, const Node& rDst);
-	void findShortestPathDijkstra(std::deque<Edge*>& rPath, const Node& rSrcNode, const Node& rDstNode);
+	double findShortestPathDijkstra(std::deque<Node*>& rPath, Node& rSrcNode, Node& rDstNode);
+	Node* minHelper(std::map<Node*,double>& map, std::list<Node*>& list );
+	std::list<Node*> neighborHelper(Node& node);
+	double minVector(Node& source, Node& dest);
+	bool isInQueue(Node& key, std::list<Node*> queue);
 
 protected:
 	std::list<Node*> m_nodes;

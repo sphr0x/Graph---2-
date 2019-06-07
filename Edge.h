@@ -16,6 +16,7 @@ public:
 	Node& getDstNode() { return m_rDst; }
 	std::string toString() const;
 	virtual double getWeight() { return 1; }
+	virtual std::string getID() { return ""; }
 private:
 	Node& m_rSrc;
 	Node& m_rDst;

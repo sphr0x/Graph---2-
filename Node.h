@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <iostream>
+
 // complete afaik
 // forward-deklaration
 class Edge;
@@ -12,9 +13,7 @@ class Node
 {
 public:
 	Node();
-	Node(std::string id) : m_id(id) { 
-		std::cout << "named Node constructed! " << std::endl;
-		s_numInstances++; }
+	Node(std::string id) : m_id(id) { s_numInstances++; }
 	virtual ~Node() { std::cout << m_id << " deleted!" << std::endl; }
 
 	std::string getID() const { return m_id; }
