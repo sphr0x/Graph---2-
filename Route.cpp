@@ -19,7 +19,7 @@ std::string Route::toString2()
 	return result;
 }
 
-const double Route::getWeight()const{
+double Route::getWeight(){
 	return m_distance;
 }
 
