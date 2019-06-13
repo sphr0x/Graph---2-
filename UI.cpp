@@ -29,11 +29,14 @@ int UI::chooseTaxi(std::list<Taxi*>& Taxis) {
 		}
 	}
 }
-void UI::menu(Graph& bGraph) {								
+void UI::menu(Graph* bGraph) {								
 	int choose;
 	double distance;
+	int start, end;
 	std::list<Taxi*> Taxis;
-	
+	Node nStart, nEnd;													// evtl pointer ?
+	std::deque<Node*> path;												// path füllen
+
 	listofTaxi(&Taxis);
 	printMenu();
 	while (1) {
@@ -43,28 +46,63 @@ void UI::menu(Graph& bGraph) {
 		switch (choose) {
 		case 1:
 			/* hier distance raus und dafür start&ziel printfkt + eingabe */
-			std::cout << "\t\t\tGewuenschte Reisestrecke eingeben ( in km ):" << std::endl;
+		/*	std::cout << "\t\t\tGewuenschte Reisestrecke eingeben ( in km ):" << std::endl;
 			std::cout << "\tEingabe: ";
 			std::cin >> distance;
-			distance = checkDist(distance);
-			if (chooseTaxi(Taxis) == 1) {
-				Taxis.front()->bookTrip(1, distance);
-			}
+			distance = checkDist(distance);		*/
+			std::cout << "Startort wählen: " << std::endl;		// alles in eine fkt ?
+			printLocation(*bGraph);
+			std::cin >> start;
+			start = checkInput(start);
+			nStart = setLocation(start, bGraph);						// setLoc schreiben
+			std::cout << "Zielort wählen: " << std::endl;
+			printLocation(*bGraph);
+			std::cin >> end;
+			end = checkInput(end);
+			nEnd = setLocation(end, bGraph);
+
+			if (chooseTaxi(Taxis) == 1) {						
+				distance = bGraph->findShortestPathDijkstra(path,nStart,nEnd);	// distance = dijkstra( start, end , DQ path )
+				Taxis.front()->bookTrip(1, distance);			// if distance >= pathlength -> not || sollte booktrip bereits machen
+				printRoute(path);								// printRoute schreiben
+				deleteRoute(path);								// delroute schreiben
+			}													// printroute( DQ path )
+					// ...
 			else{
-				Taxis.back()->bookTrip(1, distance);
+				distance = bGraph->findShortestPathDijkstra(path, nStart, nEnd);
+				Taxis.back()->bookTrip(1, distance);			// hier das selbe
+				printRoute(path);
+				deleteRoute(path);
 			}
 			break;
 		case 2:
 			/* hier distance raus und dafür start&ziel print fkt + eingabe */
-			std::cout << "\t\t\tGewuenschte Reisestrecke eingeben ( in km ):" << std::endl;
+		/*	std::cout << "\t\t\tGewuenschte Reisestrecke eingeben ( in km ):" << std::endl;
 			std::cout << "\tEingabe: ";
 			std::cin >> distance;
-			distance = checkDist(distance);
-			if (chooseTaxi(Taxis) == 1) {
+			distance = checkDist(distance);		*/
+			std::cout << "Startort wählen: " << std::endl;		// alles in eine fkt ?
+			printLocation(*bGraph);
+			std::cin >> start;
+			start = checkInput(start);
+			nStart = setLocation(start, bGraph);
+			std::cout << "Zielort wählen: " << std::endl;
+			printLocation(*bGraph);
+			std::cin >> end;
+			end = checkInput(end);
+			nEnd = setLocation(end, bGraph);
+
+			if (chooseTaxi(Taxis) == 1) {						//  hier wie ab line 60
+				distance = bGraph->findShortestPathDijkstra(path, nStart, nEnd);
 				Taxis.front()->bookTrip(0, distance);
+				printRoute(path);
+				deleteRoute(path);
 			}
-			else {
+			else {												// hier auch
+				distance = bGraph->findShortestPathDijkstra(path, nStart, nEnd);
 				Taxis.back()->bookTrip(0, distance);
+				printRoute(path);
+				deleteRoute(path);
 			}
 			break;
 		case 3:
@@ -84,8 +122,8 @@ void UI::menu(Graph& bGraph) {
 			}
 			break;
 		case 5:
-			DELETElistofTaxi(&Taxis);			// hier delete taxis ! 
-												// hier auch delete graph ?
+			DELETElistofTaxi(&Taxis);							// hier delete taxis ! 
+																// hier auch delete graph ?
 			std::cout << "\n\t\t\t\t\t\tBeende Programm!" << std::endl;
 			return;
 		case 6:		
@@ -135,7 +173,38 @@ double UI::checkDist(double distance)const {
 		std::cin >> distance;
 	}
 	return distance;
-};
+}
+void UI::printLocation(Graph& bGraph) const{
+	int i = 1;
+	for (auto node : bGraph.getNodes())std::cout << i++ << ": " << node->getID() << std::endl;
+}
+Node* UI::setLocation(int& location, Graph* bGraph){
+/*
+"Zitadelle Spandau"			1
+"Funkturm"					2
+"Grenzallee"				3
+"Alexanderplatz"			4
+"Regattastrecke Gruenau"	5
+"Ostkreuz"					6
+"Brandenburger Tor"			7
+"Strandbad Wannsee"			8
+*/
+	Node* loc;
+	std::list<Node*>::iterator it = bGraph->getNodes().begin();			// ???
+	std::advance(it, location - 1);
+	//return loc = *it;					// richtig ?
+	//oder 
+
+	auto it2 = std::next(bGraph->getNodes().begin(), location - 1);
+	return loc = *it2;
+
+}
+void UI::printRoute(std::deque<Node*>& actualRoute){
+
+}
+void UI::deleteRoute(std::deque<Node*>& actualRoute){
+
+}
 UI::UI()
 {
 }
