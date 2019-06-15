@@ -13,7 +13,7 @@ public:
 	Route(Node* Src, Node* Scr, double distance);
 	Route(std::string src, std::string dst, double distance);
 	std::string toString2();	// test
-	double getWeight();  // nicht const, da sonst nicht equal -> no virtual
+	double getWeight();  // fkt nicht const, da sonst nicht equal -> no virtual
 	~Route();
 };
 

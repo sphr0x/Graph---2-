@@ -3,7 +3,6 @@
 
 #include "Node.h"
 
-// not complete - def all functions in cpp
 class Edge
 {
 public:
@@ -15,8 +14,8 @@ public:
 	Node& getSrcNode() { return m_rSrc; }
 	Node& getDstNode() { return m_rDst; }
 	std::string toString() const;
-	virtual double getWeight() { return 1; }
-	virtual std::string getID() { return ""; }
+	virtual double getWeight() { return 1; }			// value of edge
+	virtual std::string getID() { return ""; }			// change return value for project
 private:
 	Node& m_rSrc;
 	Node& m_rDst;

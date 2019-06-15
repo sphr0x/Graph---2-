@@ -10,13 +10,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 Node* Graph::findNode(const std::string& id){
-    // - soll einen Node mit der gegebenen id in m_nodes suchen
-    // - gibt den Pointer auf den Node zurück, wenn er gefunden wurde.
-    // - gibt NULL zurück, falls kein Node mit der id gefunden wurde.
 	Node n1(id);
-	//std::list<Node*>::const_iterator it;
 
-	for (auto it = m_nodes.begin();it != m_nodes.end();++it) {					// not tested
+	for (auto it = m_nodes.begin();it != m_nodes.end();++it) {					// works
 		if (n1.getID() == (*it)->getID()) {
 			std::cout << "found: " << (*it)->getID() << std::endl;
 			return *it;
@@ -42,37 +38,14 @@ Node& Graph::addNode(Node* pNewNode){
 	//  - den neuen Node 'pNewNode' in m_nodes einfügen
 	//  - Referenz auf den neuen Node zurück geben
 
-	//std::list<Node*> m_nodes;
-	/*
-	try {
-		for (auto it = m_nodes.begin(); it != m_nodes.end();++it) {				// not tested
-			if (pNewNode->getID() == (*it)->getID()) { 
-				throw "exc";
-			}
-			else {
-				m_nodes.push_back(pNewNode);
-				//return *new Node(pNewNode->getID());falsch
-				return *pNewNode;
-			}
-		}
-	}
-	catch (const std::string) {
-		std::cerr << "Exception: Same ID!" << std::endl;
-	}*/
-	for (auto it = m_nodes.begin(); it != m_nodes.end(); ++it) {				// not tested
+	for (auto it = m_nodes.begin(); it != m_nodes.end(); ++it) {				// works
 		if (pNewNode->getID() == (*it)->getID()) {
-			throw "exc";
+			throw("exc");
 		}
 	}
-
-	
 	m_nodes.push_back(pNewNode);
-	//return *new Node(pNewNode->getID());falsch
 	return *pNewNode;
-		
-		//m_nodes.push_back(pNewNode);
 	
-
     // TEST:
     // Testen Sie die Funktion, indem Sie indem Sie einen Graph mit ein paar Nodes in main.cpp erstellen
     // Testen Sie mit der Funktion 'findNode', ob die hinzugefügten Nodes im Graph vorhanden sind.
@@ -87,25 +60,14 @@ Edge& Graph::addEdge(Edge* pNewEdge){
 	// - Testen Sie ob der Source- und Destination-Node von 'pNewEdge' schon im Graph vorhanden ist.
 	// -> fügen Sie diese Nodes hinzu, falls nicht (nutzen Sie dafür Graph::addNode)
 	
-	// std::list<Edge*> m_edges;
-	// Node& getSrcNode() { return m_rSrc; }
-	// Node& getDstNode() { return m_rDst; }
-	/*
-	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// not tested
-		if (!((*it)->getSrcNode().getID() == pNewEdge->getSrcNode().getID())) {
-			addNode(&pNewEdge->getSrcNode());
-		}
-		else if (!((*it)->getDstNode().getID() == pNewEdge->getDstNode().getID())) {
-			addNode(&pNewEdge->getDstNode());
-		}		
-	}*/
 	m_edges.push_back(pNewEdge);
-	if(!isInQueue(pNewEdge->getSrcNode(),m_nodes))
+	if(!isInQueue(pNewEdge->getSrcNode(),m_nodes))								// works
 	addNode(&pNewEdge->getSrcNode());
 	if (!isInQueue(pNewEdge->getDstNode(), m_nodes))
 	addNode(&pNewEdge->getDstNode());
-	//return *new Edge(*new Node(pNewEdge->getSrcNode()), *new Node(pNewEdge->getDstNode()));
+
 	return *pNewEdge;
+
     // TEST:
     // Testen Sie die Funktion, indem Sie indem Sie einen Graph mit ein paar Nodes und Edges in main.cpp erstellen
     // Testen Sie mit der Funktion 'findEdges', ob die hinzugefügten Edges im Graph vorhanden sind.
@@ -117,22 +79,14 @@ Edge& Graph::addEdge(Edge* pNewEdge){
 Graph::~Graph(){
     // - soll alle Edges im Graph löschen (delete)
     // - soll alle Nodes im Graph löschen (delete)
-	/*
-	for (auto it = m_edges.begin(); it != m_edges.end();++it) {						// not tested
-		delete *it;															// here the problems with iterator and delete
-		m_edges.erase(it);               // needed ?
-	}
-	for (auto it = m_nodes.begin(); it != m_nodes.end();++it) {
-		delete *it;
-		m_nodes.erase(it);
-	}
-	*/
-	for (auto edge : m_edges)delete edge;
-	for (auto node : m_nodes)delete node;
 
-	//m_nodes.clear();
-	//m_edges.clear();
-	// rangebasierte for schleifen -> ersetzten !!!
+	for (auto edge : m_edges) {													// works
+		delete edge;
+	}
+	for (auto node : m_nodes) {
+		delete node;
+	}
+	std::cout << " Graph destroyed !" << std::endl;
 }
 
 
@@ -142,24 +96,10 @@ void Graph::remove(Node& rNode){
 	// - finden sie den Pointer mit der Adresse von 'rNode' in m_nodes.
     // 		- der Pointer auf rNode soll aus m_nodes entfernt werden!
     // 		- der Pointer auf rNode muss mit 'delete' freigegeben werden!
-	/*
-	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// not tested
-		if ((*it)->isConnectedTo(rNode)) {
-			//m_edges.erase(it);
-			m_edges.remove(*it);
-		}
-	}
-	*/
-	/*
-	for (auto it = m_nodes.begin(); it != m_nodes.end();++it) {
-		if (*it == &rNode) {				// deref it == adress of rNode  ??? ( it double ptr ? )
-			delete *it;
-			m_nodes.erase(it);
-		}
-	}
-	*/
-	m_nodes.remove(&rNode);
+	
+	m_nodes.remove(&rNode);													// works
 	delete(&rNode);
+
     // TEST:
     // Testen Sie die Funktion, indem Sie indem Sie einen Graph mit ein paar Nodes und Edges in main.cpp erstellen
     // und anschließend einzelne Nodes wieder löschen.
@@ -172,18 +112,9 @@ void Graph::remove(Node& rNode){
 void Graph::remove(Edge& rEdge){
     // - der Pointer auf rEdge muss aus m_edges entfernt werden!
     // - der Pointer auf rEdge muss mit 'delete' freigegeben werden!
-	m_edges.remove(&rEdge);
+
+	m_edges.remove(&rEdge);													// works
 	delete& rEdge;
-	/*
-	for (std::list<Edge*>::iterator it = m_edges.begin(); it != m_edges.end();++it) {								// not testedto
-		if (*it == &rEdge) {
-			m_edges.remove(*it);
-
-			delete *it;
-
-			//break;
-		}
-	}*/
 
     // TEST:
     // Testen Sie die Funktion, indem Sie indem Sie einen Graph mit ein paar Nodes und Edges in main.cpp erstellen
@@ -200,7 +131,7 @@ std::vector<Edge*> Graph::findEdges(const Node& rSrc, const Node& rDst){
     // - füge die Zeiger der Edges in den vector 'ret' ein.
 	std::vector<Edge*> ret;
 
-  	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// not tested
+  	for (auto it = m_edges.begin(); it != m_edges.end();++it) {								// works
 		if ( ( (*it)->isConnectedTo(rSrc) ) && ( (*it)->isConnectedTo(rDst) ) ) { 
 			ret.push_back(*it);
 		}
@@ -215,44 +146,9 @@ std::vector<Edge*> Graph::findEdges(const Node& rSrc, const Node& rDst){
 
 //---------------------------------------------------------------------------------------------------------------------
 
-double Graph::findShortestPathDijkstra(std::deque<Node*>& rPath, Node& rSrcNode, Node& rDstNode)
-{
-	/*
-	Ein häufiges Anwendungsproblem für Graphen-Anwendungen besteht darin,
-	den Pfad zwischen verschiedenen Nodes zu finden, die direkt oder indirekt über Edges miteinander verbunden sind.
-	Um den optimalsten Pfad(den mit den geringsten Kantengewichten) zu finden, gibt es den Dijkstra-Algorithmus!
-	Pseudocode (Quelle: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
-	>>>
-	function Dijkstra(Graph, source):
-
-		  create vertex set Q
-
-		  for each vertex v in Graph:             // Initialization
-			  dist[v] ← INFINITY                  // Unknown distance from source to v
-			  prev[v] ← UNDEFINED                 // Previous node in optimal path from source
-			  add v to Q                          // All nodes initially in Q (unvisited nodes)
-
-		  dist[source] ← 0                        // Distance from source to source
-
-		  while Q is not empty:
-			  u ← vertex in Q with min dist[u]    // Source node will be selected first
-			  remove u from Q
-
-			  for each neighbor v of u:           // where v is still in Q.
-				  alt ← dist[u] + length(u, v)
-				  if alt < dist[v]:               // A shorter path to v has been found
-					  dist[v] ← alt
-					  prev[v] ← u
-
-		  return dist[], prev[]
-	<<<
-
-	Betrachten Sie den Pseudocode und setzen Sie ihn in C++ um.
-	Sortieren Sie am Ende das Ergebnis in die richtige Reihenfolge um
-	und geben sie die kürzeste Route zwischen rSrcNode und rDstNode als Liste von Edges zurück.
-
-
-	// idee : 2 x mal MAP | 1 x queue
+double Graph::findShortestPathDijkstra(std::deque<Node*>& rPath, Node& rSrcNode, Node& rDstNode){
+										/*
+	// idee :
 	{
 	2x map ( dist, prev )
 	1x list / queue _/ p-queue
@@ -264,7 +160,7 @@ double Graph::findShortestPathDijkstra(std::deque<Node*>& rPath, Node& rSrcNode,
 	dist v source = 0
 
 	while(!list not empty){
-	u = node wiht min dist (hepter function) // oder sort mintomax und pop front  // oder priority queue
+	u = node wiht min dist (helper function) // oder sort mintomax und pop front  // oder priority queue
 	queue.remove(u)
 
 	for(auto neighbor: neighbor(u)){
@@ -276,15 +172,10 @@ double Graph::findShortestPathDijkstra(std::deque<Node*>& rPath, Node& rSrcNode,
 	}
 	}
 	return dist[destination]
-	}
+	}									*/
 
-	TEST:
-	Testen Sie diese Funktion, indem Sie einen Graph in main.cpp erstellen
-	und sich die kürzesteste Route zwischen 2 Nodes zurückgeben lassen.
-	*/
-
-	std::list<Node*> queue;  // const try
-	std::map<Node*, double> distance;
+	std::list<Node*> queue; 
+	std::map<Node*, double> distance;											// works
 	std::map<Node*, Node*> previous;
 
 	for (auto node : m_nodes) {
@@ -293,7 +184,6 @@ double Graph::findShortestPathDijkstra(std::deque<Node*>& rPath, Node& rSrcNode,
 		previous[node] = nullptr;
 	}
 	distance[&rSrcNode] = 0;
-
 	while (!queue.empty()) {
 		Node* u = minHelper(distance, queue);
 		queue.remove(u);
@@ -304,23 +194,24 @@ double Graph::findShortestPathDijkstra(std::deque<Node*>& rPath, Node& rSrcNode,
 				distance[v] = minDistance;
 				previous[v] = u;
 			}
-
 		}
 	}
 	Node* dest = &rDstNode;
 	rPath.push_front(dest);
-	while (dest != &rSrcNode || dest == nullptr) {
+
+	while (dest != &rSrcNode) {		
 		dest = previous[dest];
 		if (dest != nullptr) {
 			rPath.push_front(dest);
 		}
+		else break;
 	}
-		return distance[&rDstNode];
-	}
+	return distance[&rDstNode];
+}
 
+	// Helper for Dijkstra // working
 
-Node* Graph::minHelper(std::map<Node*, double>& map, std::list<Node*>& list)
-{
+Node* Graph::minHelper(std::map<Node*, double>& map, std::list<Node*>& list){
 	double dist = 10001;
 	Node* key = nullptr;
 
@@ -333,10 +224,7 @@ Node* Graph::minHelper(std::map<Node*, double>& map, std::list<Node*>& list)
 	return key;
 }
 
-
-
-std::list<Node*> Graph::neighborHelper(Node& node)
-{
+std::list<Node*> Graph::neighborHelper(Node& node){
 	std::list<Node*> result;
 
 	for (auto edge : node.getOutEdges()) {
@@ -347,8 +235,7 @@ std::list<Node*> Graph::neighborHelper(Node& node)
 	return result;
 }
 
-double Graph::minVector(Node& source, Node& dest)
-{
+double Graph::minVector(Node& source, Node& dest){
 	double result = 10002;
 	std::vector<Edge*> edgeV = findEdges(source, dest);
 
@@ -357,12 +244,10 @@ double Graph::minVector(Node& source, Node& dest)
 			result = edge->getWeight();
 		}
 	}
-
 	return result;
 }
 
-bool Graph::isInQueue(Node& key, std::list<Node*> queue)
-{
+bool Graph::isInQueue(Node& key, std::list<Node*> queue){
 	for (auto search : queue) {
 		if (search == &key) {
 			return  true;

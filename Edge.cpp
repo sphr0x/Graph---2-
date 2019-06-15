@@ -4,6 +4,7 @@
 #include <iostream>
 //---------------------------------------------------------------------------------------------------------------------
 
+
 Edge::Edge(Node& rSrc, Node& rDst) : m_rSrc(rSrc), m_rDst(rDst)
 {
     // fügt die Edge (this) in m_outgoingEdges des Source-Node ein.
@@ -12,7 +13,8 @@ Edge::Edge(Node& rSrc, Node& rDst) : m_rSrc(rSrc), m_rDst(rDst)
 
 	rSrc.getOutEdges().push_back(this);											// works
 	rDst.getInEdges().push_back(this);
-	std::cout << "K" << std::endl; 
+
+	//std::cout << "K" << std::endl; 
     // TEST:
     // Erstellen Sie in main.cpp eine Edge und prüfen Sie, ob die Edge
     // korrekt in m_outgoingEdges bzw. m_incomingEdges eingefügt wurde!			// works
@@ -27,7 +29,7 @@ Edge::Edge(const Edge& rOther) : m_rSrc(rOther.m_rSrc), m_rDst(rOther.m_rDst)
 
 	rOther.m_rSrc.getOutEdges().push_back(this);								// works
 	rOther.m_rDst.getInEdges().push_back(this);
-	std::cout << "CK" << std::endl;
+	//std::cout << "CK" << std::endl;
 }
 
 
@@ -39,17 +41,13 @@ Edge::~Edge()
     // - entfernt die Edge (this) aus m_incomingEdges im Destination-Node
 
 	m_rSrc.getOutEdges().remove(this);											// works
-	//m_rSrc.getInEdges().remove(this);
 	m_rDst.getInEdges().remove(this);
-	//m_rDst.getOutEdges().remove(this);
-	std::cout << "DEST" << std::endl;
+	//std::cout << "DEST" << std::endl;
 
     // TEST:																 
-
     // Erstellen Sie in main.cpp drei Edges, die jeweils den selben Source- und Destination-Node haben.		// works
     // Löschen Sie eine Edge wieder!
     // Prüfen Sie, ob die gelöschte Edge aus m_outgoingEdges bzw. m_incomingEdges entfernt wurde!
-
     // Hinweis: arbeiten Sie mit 'new' und 'delete'!
 }
 
@@ -65,10 +63,10 @@ bool Edge::isConnectedTo(const Node& rNode) const
 	const Node *ptr3 = &m_rDst;
 
 	if ((ptr1 == ptr2)||(ptr1 == ptr3)) {
-		//std::cout << "1" << std::endl;
+		//std::cout << "connected" << std::endl;
 		return true;
 	}
-	//std::cout << "0" << std::endl;
+	//std::cerr << "NOT connected" << std::endl;
     return false;
 }
 

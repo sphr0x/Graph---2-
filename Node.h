@@ -5,8 +5,9 @@
 #include <list>
 #include <iostream>
 
-// complete afaik
+
 // forward-deklaration
+
 class Edge;
 
 class Node
@@ -14,7 +15,7 @@ class Node
 public:
 	Node();
 	Node(std::string id) : m_id(id) { s_numInstances++; }
-	virtual ~Node() { std::cout << m_id << " deleted!" << std::endl; }
+	virtual ~Node() { /*std::cout << m_id << " deleted!" << std::endl;*/ }
 
 	std::string getID() const { return m_id; }
 	std::list<Edge*>& getOutEdges() { return m_outgoingEdges; }

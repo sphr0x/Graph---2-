@@ -12,8 +12,7 @@ Route::Route(Node * Src, Node * Dst, double distance):Edge(*Src,*Dst){
 Route::Route(std::string src, std::string dst, double distance):Edge(*new Node(src),*new Node(dst)){
 	this->m_distance = distance;
 }
-std::string Route::toString2() // nur test
-{
+std::string Route::toString2(){ // nur test
 	std::string result;
 	result = getSrcNode().getID() + " -> " + getDstNode().getID() + " | distance: " + std::to_string(m_distance);
 	return result;

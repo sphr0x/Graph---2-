@@ -24,10 +24,10 @@ void Taxi::bookTrip(bool guest, double distance) {
 		m_fuelACT -= (m_consumpKM*distance);
 		if (guest == 1) {
 			m_balance += (distance * m_costKM);
-			std::cout << "\t\t\tGebucht mit Fahrgast!" << std::endl;
+			std::cout << "\n\t\t\tGebucht mit Fahrgast!" << std::endl;
 		}
 		else if (guest == 0) {
-			std::cout << "\t\t\tGebucht ohne Fahrgast!" << std::endl;
+			std::cout << "\n\t\t\tGebucht ohne Fahrgast!" << std::endl;
 		}
 	}
 	else if (distance < 0) {
@@ -65,7 +65,7 @@ Taxi::Taxi(double fuelMax, double consump, double price, std::string name, doubl
 	++m_count;
 	++m_countEver;
 	m_number = staticName();
-	std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
+	//std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
 }
 Taxi::Taxi(const Taxi &input) 
 	: m_number(input.m_number), m_consumpKM(input.m_consumpKM), m_costKM(input.m_costKM), m_fuelMAX(input.m_fuelMAX), m_mileageDAY(0.0), m_fuelACT(input.m_fuelMAX),
@@ -73,17 +73,17 @@ Taxi::Taxi(const Taxi &input)
 	setName();													// 1 c)
 	++m_count;
 	++m_countEver;
-	std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
+	//std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
 }																							
 Taxi::Taxi()													// 3 c)													
 	: m_number("Taxi_001"), m_consumpKM(7.2 / 100), m_costKM(0.7), m_fuelMAX(75), m_mileageDAY(0.0), m_fuelACT(75),
 	m_balance(0.0) {
 	++m_count;
 	++m_countEver;
-	std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
+	//std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
 }
 Taxi::~Taxi(){
-	std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
+	//std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
 	--m_count;
 }
 void Taxi::setName() {
