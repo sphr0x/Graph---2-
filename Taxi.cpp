@@ -61,29 +61,25 @@ std::string Taxi::toString()const {
 Taxi::Taxi(double fuelMax, double consump, double price, std::string name, double balance )
 	: m_number(name), m_consumpKM(consump / 100), m_costKM(price), m_fuelMAX(fuelMax), m_mileageDAY(0.0), m_fuelACT(fuelMax),
 	m_balance(balance) {
-	setName();													// 1 c)
+	setName();													
 	++m_count;
 	++m_countEver;
 	m_number = staticName();
-	//std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
 }
 Taxi::Taxi(const Taxi &input) 
 	: m_number(input.m_number), m_consumpKM(input.m_consumpKM), m_costKM(input.m_costKM), m_fuelMAX(input.m_fuelMAX), m_mileageDAY(0.0), m_fuelACT(input.m_fuelMAX),
 	m_balance(0.0) {
-	setName();													// 1 c)
+	setName();													
 	++m_count;
 	++m_countEver;
-	//std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
 }																							
-Taxi::Taxi()													// 3 c)													
+Taxi::Taxi()																										
 	: m_number("Taxi_001"), m_consumpKM(7.2 / 100), m_costKM(0.7), m_fuelMAX(75), m_mileageDAY(0.0), m_fuelACT(75),
 	m_balance(0.0) {
 	++m_count;
 	++m_countEver;
-	//std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
 }
 Taxi::~Taxi(){
-	//std::cout << "(Taxi-Counter bei " << m_count << ")" << std::endl;
 	--m_count;
 }
 void Taxi::setName() {

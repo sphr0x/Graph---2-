@@ -16,9 +16,9 @@ private:
 	const double m_costKM;															
 	double m_balance;
 
-	static int m_count;												// 5 a) + please check increment/decrement of every constructor/deconstructor
-	static int m_countEver;											// 5 c)
-	std::string m_number;											// 1 a)
+	static int m_count;												
+	static int m_countEver;											
+	std::string m_number;											
 public:
 	// void initialize(double fuelM, double consump, double price = 0.0);			
 	void bookTrip(bool guest, double distance = 0.0);
@@ -29,9 +29,9 @@ public:
 	Taxi(const Taxi &input);														
 	~Taxi();
 
-	void setName();													// 1 b)
-	std::string getName()const;										// 1 b)
-	std::string getState()const;									// 2 a)
+	void setName();													
+	std::string getName()const;										
+	std::string getState()const;									
 	std::string getCountofTaxis()const;
 	std::string staticName();
 };

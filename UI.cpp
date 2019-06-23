@@ -4,13 +4,6 @@
 #include <windows.h>
 
 void UI::printMenu()const {	
-
-	/*void slow_print(const std::string& str, int delay_time) {              -> maybe
-		for (size_t i = 0; i != str.size(); ++i) {
-			std::cout << str[i];
-			Sleep(delay_time);
-		}
-	} */
 	Sleep(500);
 	std::cout << "\n\t\t\t    ->  [             Taxiprogramm v 2.0             ]  <- \n" << std::endl;
 	Sleep(500);
@@ -31,11 +24,11 @@ int UI::chooseTaxi(std::list<Taxi*>& Taxis) {
 		std::cin >> choose;
 		choose = checkInput(choose);
 		if (choose == 1) {
-			std::cout << "\t\t\tTaxi-Bez: " << Taxis.front()->getName() << std::endl;		// 1 d)
+			std::cout << "\t\t\tTaxi-Bez: " << Taxis.front()->getName() << std::endl;		
 			return choose;
 		}
 		else if(choose == 2) {
-			std::cout << "\t\t\tTaxi-Bez: " << Taxis.back()->getName() << std::endl;		// 1 d)
+			std::cout << "\t\t\tTaxi-Bez: " << Taxis.back()->getName() << std::endl;		
 			return choose;
 		}
 		else {
@@ -43,75 +36,79 @@ int UI::chooseTaxi(std::list<Taxi*>& Taxis) {
 		}
 	}
 }
-void UI::menu(Graph* bGraph) {								
+void UI::menu() {		
+	Graph* bRoute = new Graph;
 	int choose;
 	double distance;
 	int start, end;
 	std::list<Taxi*> Taxis;
 	Node* nStart = nullptr;
-	Node* nEnd = nullptr;													//  pointer !!
+	Node* nEnd = nullptr;													
 	std::deque<Node*> path;													//  path filled in dijkstra
 
+	setMap(*bRoute);
 	listofTaxi(&Taxis);
-	printMenu();
+
 	while (1) {
+		system("cls");
+		printMenu();
 		std::cout << "\tEingabe: ";
 		std::cin >> choose;
 		choose = checkInput(choose);
 		switch (choose) {
 		case 1:
-			std::cout << "\n\t\t\tBitte Startort waehlen: ( 1 bis 8 ) \n" << std::endl;		// alles in eine fkt ? void setRoute(Graph* bGraph,int start,int end, Node& nStart,Node& nEnd,)
-			printLocation(*bGraph);
+			std::cout << "\n\t\t\tBitte Startort waehlen: ( 1 bis 8 ) \n" << std::endl;		// 6 a)
+			printLocation(*bRoute);
 			std::cout << "\tEingabe: ";
 			std::cin >> start;
 			start = checkInput(start);
-			nStart = setLocation(start, bGraph);						
+			nStart = setLocation(start, bRoute);
 			std::cout << "\n\t\t\tBitte Zielort waehlen: ( 1 bis 8 ) \n" << std::endl;
-			printLocation(*bGraph);
+			printLocation(*bRoute);
 			std::cout << "\tEingabe: ";
 			std::cin >> end;
 			end = checkInput(end,start);
-			nEnd = setLocation(end, bGraph);					// ...
+			nEnd = setLocation(end, bRoute);					
 			if (chooseTaxi(Taxis) == 1) {						
-				distance = bGraph->findShortestPathDijkstra(path,*nStart,*nEnd);
+				distance = bRoute->findShortestPathDijkstra(path,*nStart,*nEnd);
 				Taxis.front()->bookTrip(1, distance);			
-				printRoute(path,distance, *nEnd);
-				
+				printRoute(path,distance, *nEnd);											// 6 b)
 				deleteRoute(path);								
 			}													
 			else{
-				distance = bGraph->findShortestPathDijkstra(path, *nStart, *nEnd);
+				distance = bRoute->findShortestPathDijkstra(path, *nStart, *nEnd);
 				Taxis.back()->bookTrip(1, distance);			
-				printRoute(path,distance, *nEnd);
+				printRoute(path,distance, *nEnd);											// 6 b)
 				deleteRoute(path);
 			}
+			system("pause");
 			break;
 		case 2:
-			std::cout << "\n\t\t\tBitte Startort waehlen: ( 1 bis 8 )\n" << std::endl;		// alles in eine fkt ?
-			printLocation(*bGraph);
+			std::cout << "\n\t\t\tBitte Startort waehlen: ( 1 bis 8 )\n" << std::endl;		// 6 a)
+			printLocation(*bRoute);
 			std::cout << "\tEingabe: ";
 			std::cin >> start;
 			start = checkInput(start);
-			nStart = setLocation(start, bGraph);
+			nStart = setLocation(start, bRoute);
 			std::cout << "\n\t\t\tBitte Zielort waehlen: ( 1 bis 8 )\n" << std::endl;
-			printLocation(*bGraph);
+			printLocation(*bRoute);
 			std::cout << "\tEingabe: ";
 			std::cin >> end;
 			end = checkInput(end,start);
-			nEnd = setLocation(end, bGraph);
-
+			nEnd = setLocation(end, bRoute);
 			if (chooseTaxi(Taxis) == 1) {						
-				distance = bGraph->findShortestPathDijkstra(path, *nStart, *nEnd);
+				distance = bRoute->findShortestPathDijkstra(path, *nStart, *nEnd);
 				Taxis.front()->bookTrip(0, distance);
-				printRoute(path,distance,*nEnd);
+				printRoute(path,distance,*nEnd);											// 6 b)
 				deleteRoute(path);
 			}
 			else {												
-				distance = bGraph->findShortestPathDijkstra(path, *nStart, *nEnd);
+				distance = bRoute->findShortestPathDijkstra(path, *nStart, *nEnd);
 				Taxis.back()->bookTrip(0, distance);
-				printRoute(path,distance,*nEnd);
+				printRoute(path,distance,*nEnd);											// 6 b)
 				deleteRoute(path);
 			}
+			system("pause");
 			break;
 		case 3:
 			if (chooseTaxi(Taxis) == 1) {
@@ -120,6 +117,7 @@ void UI::menu(Graph* bGraph) {
 			else{
 				Taxis.back()->fillUp();
 			}
+			system("pause");
 			break;
 		case 4:
 			if (chooseTaxi(Taxis) == 1) {
@@ -128,10 +126,11 @@ void UI::menu(Graph* bGraph) {
 			else {
 				std::cout << Taxis.back()->getState() << std::endl;			// 2 b)
 			}
+			system("pause");
 			break;
 		case 5:
-			DELETElistofTaxi(&Taxis);							// hier delete taxis ! 
-																// hier auch delete graph ?
+			DELETElistofTaxi(&Taxis);									// delete taxis ! 
+			delete bRoute;												// delete graph 
 			std::cout << "\n\t\t\t\t\t\tBeende Programm!" << std::endl;
 			return;
 		case 6:		
@@ -150,7 +149,6 @@ void UI::listofTaxi(std::list<Taxi*>* Taxis) {
 	Taxis->push_back(car3);
 	Taxi *car4 = new Taxi(90, 12.5, 0.95);
 	Taxis->push_back(car4);
-	//std::cout << "\t\t\t Taxi 1 hat den Bezeichner: " << car3->getName() << std::endl << "\t\t\t Taxi 2 hat den Bezeichner: " << car4->getName() << std::endl;
 }
 void UI::DELETElistofTaxi(std::list<Taxi*>* Taxis) {
 	int i = 1;
@@ -204,7 +202,7 @@ Node* UI::setLocation(int& location, Graph* bGraph){
 "Strandbad Wannsee"			8
 */
 	Node* loc;
-	auto it2 = std::next(bGraph->getNodes().begin(), location - 1); // sync nodes to position
+	auto it2 = std::next(bGraph->getNodes().begin(), location - 1);			 // sync nodes to position
 	return loc = *it2;
 }
 void UI::printRoute(std::deque<Node*>& actualRoute, double distance, Node& dest){
@@ -222,6 +220,67 @@ void UI::printRoute(std::deque<Node*>& actualRoute, double distance, Node& dest)
 }
 void UI::deleteRoute(std::deque<Node*>& actualRoute){
 	actualRoute.clear();
+}
+void UI::setMap(Graph& berlin){													// 5 b)
+
+	Node *n1 = new Node("Zitadelle Spandau");
+	Node *n2 = new Node("Funkturm");
+	Node* n3 = new Node("Grenzallee");
+	Node* n4 = new Node("Alexanderplatz");
+	Node* n5 = new Node("Regattastrecke Gruenau");
+	Node* n6 = new Node("Ostkreuz");
+	Node* n7 = new Node("Brandenburger Tor");
+	Node* n8 = new Node("Strandbad Wannsee");
+
+	Route* r1 = new Route(*n1, *n2, 8.5);
+	Route* r2 = new Route(*n4, *n7, 3.2);
+	Route* r3 = new Route(*n7, *n8, 18.0);
+	Route* r4 = new Route(*n8, *n2, 11.2);
+	Route* r5 = new Route(*n2, *n4, 10.2);
+	Route* r6 = new Route(*n4, *n6, 6.2);
+	Route* r7 = new Route(*n6, *n5, 14.6);
+	Route* r8 = new Route(*n5, *n3, 12.8);
+	Route* r9 = new Route(*n3, *n4, 11.2);
+	Route* r10 = new Route(*n3, *n2, 14.9);
+	Route* r11 = new Route(*n2, *n1, 8.5);
+	Route* r12 = new Route(*n7, *n4, 3.2);
+	Route* r13 = new Route(*n8, *n7, 18.0);
+	Route* r14 = new Route(*n2, *n8, 11.2);
+	Route* r15 = new Route(*n4, *n2, 10.2);
+	Route* r16 = new Route(*n6, *n4, 6.2);
+	Route* r17 = new Route(*n5, *n6, 14.6);
+	Route* r18 = new Route(*n3, *n5, 12.8);
+	Route* r19 = new Route(*n4, *n3, 11.2);
+	Route* r20 = new Route(*n2, *n3, 14.9);
+
+	berlin.addNode(n1);
+	berlin.addNode(n2);
+	berlin.addNode(n3);
+	berlin.addNode(n4);
+	berlin.addNode(n5);
+	berlin.addNode(n6);
+	berlin.addNode(n7);
+	berlin.addNode(n8);
+
+	berlin.addEdge(r1);
+	berlin.addEdge(r2);
+	berlin.addEdge(r3);
+	berlin.addEdge(r4);
+	berlin.addEdge(r5);
+	berlin.addEdge(r6);
+	berlin.addEdge(r7);
+	berlin.addEdge(r8);
+	berlin.addEdge(r9);
+	berlin.addEdge(r11);
+	berlin.addEdge(r12);
+	berlin.addEdge(r13);
+	berlin.addEdge(r14);
+	berlin.addEdge(r15);
+	berlin.addEdge(r16);
+	berlin.addEdge(r17);
+	berlin.addEdge(r18);
+	berlin.addEdge(r19);
+	berlin.addEdge(r20);
 }
 UI::UI()
 {
