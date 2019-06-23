@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 
-Edge::Edge(Node& rSrc, Node& rDst) : m_rSrc(rSrc), m_rDst(rDst)
+Edge::Edge(Node& rSrc, Node& rDst) : m_rSrc(rSrc), m_rDst(rDst)					// 2 a - c )
 {
     // fügt die Edge (this) in m_outgoingEdges des Source-Node ein.
     // fügt die Edge (this) in m_incomingEdges des Destination-Node ein.

@@ -9,7 +9,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-Node* Graph::findNode(const std::string& id){
+Node* Graph::findNode(const std::string& id){									// 3 a - f )
 	Node n1(id);
 
 	for (auto it = m_nodes.begin();it != m_nodes.end();++it) {					// works
@@ -86,7 +86,7 @@ Graph::~Graph(){
 	for (auto node : m_nodes) {
 		delete node;
 	}
-	std::cout << " Graph destroyed !" << std::endl;
+	std::cout << "\t\t\tGraph destroyed !" << std::endl;
 }
 
 
@@ -147,33 +147,7 @@ std::vector<Edge*> Graph::findEdges(const Node& rSrc, const Node& rDst){
 //---------------------------------------------------------------------------------------------------------------------
 
 double Graph::findShortestPathDijkstra(std::deque<Node*>& rPath, Node& rSrcNode, Node& rDstNode){
-										/*
-	// idee :
-	{
-	2x map ( dist, prev )
-	1x list / queue _/ p-queue
-
-	for(auto node:nodes){
-	alle nodes mit wert in maps einfügen
-	alle nodes in list
-	}
-	dist v source = 0
-
-	while(!list not empty){
-	u = node wiht min dist (helper function) // oder sort mintomax und pop front  // oder priority queue
-	queue.remove(u)
-
-	for(auto neighbor: neighbor(u)){
-	dist=dist(u)+mninweg(neighbor->u)
-	if(dist < dist(v)){
-	dist(v)=dist
-	prev(neighbor) = u
-	}
-	}
-	}
-	return dist[destination]
-	}									*/
-
+																				// 4 a)
 	std::list<Node*> queue; 
 	std::map<Node*, double> distance;											// works
 	std::map<Node*, Node*> previous;
